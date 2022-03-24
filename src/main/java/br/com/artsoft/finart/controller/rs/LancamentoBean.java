@@ -37,31 +37,44 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 
 import org.primefaces.model.StreamedContent;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import br.com.artsoft.finart.controller.dto.UsuarioDTO;
 import br.com.artsoft.finart.controller.rs.util.ContextoUtil;
 import br.com.artsoft.finart.controller.rs.util.RelatorioUtil;
-import financeiro.model.Categoria;
-import financeiro.model.Cheque;
-import financeiro.model.ChequeId;
-import financeiro.model.Conta;
-import financeiro.model.Lancamento;
-import financeiro.rn.ChequeRN;
-import financeiro.rn.LancamentoRN;
-import financeiro.util.RNException;
+import br.com.artsoft.finart.model.domain.Categoria;
+import br.com.artsoft.finart.model.domain.Cheque;
+import br.com.artsoft.finart.model.domain.ChequeId;
+import br.com.artsoft.finart.model.domain.Conta;
+import br.com.artsoft.finart.model.domain.Lancamento;
+import br.com.artsoft.finart.model.domain.Usuario;
+import br.com.artsoft.finart.model.exception.RNException;
+import br.com.artsoft.finart.model.service.ChequeRN;
+import br.com.artsoft.finart.model.service.LancamentoRN;
 import financeiro.util.UtilException;
 
 
 @RestController
+@RequestMapping("/lancamento")
 public class LancamentoBean {
 
+	@Autowired
+	LancamentoRN lancamentoRN;
+	
 	private List<Lancamento>	lista;
 	private List<Lancamento>	listaAteHoje;
 	private List<Lancamento>	listaFuturos;
@@ -69,77 +82,44 @@ public class LancamentoBean {
 	private List<Lancamento>	listaMesAnterior;
 	private List<Double>		saldos	= new ArrayList<Double>();
 	private float				saldoGeral;
-
-	private Lancamento			editado	= new Lancamento();
-	private Integer				numeroCheque;
+	
 	private Integer				periodo;
 
 	private Date				dataInicialRelatorio;
 	private Date				dataFinalRelatorio;
-	private StreamedContent		arquivoRetorno;
-	
-	public LancamentoBean() {
-		this.novo();
-	}
+	private StreamedContent		arquivoRetorno;			
 
-	public void novo() {
-		this.editado = new Lancamento();
-		this.editado.setData(new Date(System.currentTimeMillis()));
-		this.numeroCheque = null;
+	@PostMapping
+	public ResponseEntity<Lancamento> salvar(@RequestBody Lancamento lancamento) {			
+		
 		this.periodo = 1;
-	}
-
-	public void editar() {
-		Cheque cheque = this.editado.getCheque();
-		if (cheque != null) {
-			this.numeroCheque = cheque.getChequeId().getCheque();
-		}
-	}
-
-	public void salvar() {
+		
 		ContextoBean contextoBean = ContextoUtil.getContextoBean();
-		this.editado.setUsuario(contextoBean.getUsuarioLogado());
-		this.editado.setConta(contextoBean.getContaAtiva());
+		lancamento.setUsuario(contextoBean.getUsuarioLogado());
+		lancamento.setConta(contextoBean.getContaAtiva());
 		
 		//RN LB001 - se a descrição não for informada adiciona descrição da Categoria
-		if (this.editado.getDescricao() == null || this.editado.getDescricao() == ""){
-			if (this.editado.getCategoria().getDescricao() != null){
-				this.editado.setDescricao(this.editado.getCategoria().getDescricao());
+		if (lancamento.getDescricao() == null || lancamento.getDescricao() == ""){
+			if (lancamento.getCategoria().getDescricao() != null){
+				lancamento.setDescricao(lancamento.getCategoria().getDescricao());
 			}
 		}
-
-		ChequeRN chequeRN = new ChequeRN();
-		ChequeId chequeId = null;
-		if (this.numeroCheque != null) {
-			chequeId = new ChequeId();
-			chequeId.setConta(contextoBean.getContaAtiva().getConta());
-			chequeId.setCheque(this.numeroCheque);
-			Cheque cheque = chequeRN.carregar(chequeId);
-			FacesContext context = FacesContext.getCurrentInstance();
-			if (cheque == null) {
-				FacesMessage msg = new FacesMessage("Cheque não cadastrado");
-				context.addMessage(null, msg);
-				return;
-			} else if (cheque.getSituacao() == Cheque.SITUACAO_CHEQUE_CANCELADO) {
-				FacesMessage msg = new FacesMessage("Cheque já cancelado");
-				context.addMessage(null, msg);
-				return;
-			} else {
-				this.editado.setCheque(cheque);
-				chequeRN.baixarCheque(chequeId, this.editado);
-			}
-		}
-		LancamentoRN lancamentoRN = new LancamentoRN();
-		lancamentoRN.salvar(this.editado);
-		this.novo();
-		this.lista = null;
+		
+		lancamentoRN.salvar(lancamento);	
+		
+		return ResponseEntity.ok(lancamento);		
 	}
 
-	public void excluir() {
-		LancamentoRN lancamentoRN = new LancamentoRN();
-		this.editado = lancamentoRN.carregar(this.editado.getLancamento());
-		lancamentoRN.excluir(this.editado);
-		this.lista = null;
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Lancamento> excluir(@PathVariable("id") Integer codigo) {
+		
+		Lancamento lancamento = lancamentoRN.carregar(codigo);
+		
+		if(Objects.isNull(lancamento)) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		lancamentoRN.excluir(lancamento);		
 	}
 
 	public List<Lancamento> getLista() {

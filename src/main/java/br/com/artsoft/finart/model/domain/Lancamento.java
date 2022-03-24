@@ -82,6 +82,7 @@ public class Lancamento implements Serializable {
 	private Categoria	        categoria;
 	
 	@Temporal(TemporalType.DATE)
+	@CreatedDate
 	private Date	           data;
 	private String	           descricao;
 	@Column(precision = 10, scale = 2)
