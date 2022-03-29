@@ -33,80 +33,67 @@ package br.com.artsoft.finart.controller.rs;
 
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.artsoft.finart.controller.rs.util.ContextoUtil;
-import br.com.artsoft.finart.controller.rs.util.YahooFinanceUtil;
+import br.com.artsoft.finart.controller.util.ContextoUtil;
 import br.com.artsoft.finart.model.domain.Acao;
 import br.com.artsoft.finart.model.domain.AcaoVirtual;
+import br.com.artsoft.finart.model.domain.Usuario;
 import br.com.artsoft.finart.model.exception.RNException;
 import br.com.artsoft.finart.model.service.AcaoRN;
+import br.com.artsoft.finart.model.service.ContextoRN;
+import br.com.artsoft.finart.model.service.yahoofinance.YahooProperties;
 
 @RestController
 public class AcaoBean {
 
+	@Autowired
+	ContextoRN contextoRN;
+	
+	@Autowired
+	AcaoRN acaoRN;
+	
 	private AcaoVirtual			selecionada		= new AcaoVirtual();
 	private List<AcaoVirtual>	lista				= null;
 	private String					linkCodigoAcao	= null;
 
 	public void salvar() {
-		ContextoBean contextoBean = ContextoUtil.getContextoBean();
-		AcaoRN acaoRN = new AcaoRN();
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getLoginUsuarioLogado());		
 		Acao acao = this.selecionada.getAcao();
 		acao.setSigla(acao.getSigla().toUpperCase());
-		acao.setUsuario(contextoBean.getUsuarioLogado());
+		acao.setUsuario(usuarioLogado);
 		acaoRN.salvar(acao);
 		this.selecionada = new AcaoVirtual();
 		this.lista = null;
 	}
 
-	public void excluir() {
-		AcaoRN acaoRN = new AcaoRN();
+	public void excluir() {		
 		acaoRN.excluir(this.selecionada.getAcao());
 		this.selecionada = new AcaoVirtual();
 		this.lista = null;
 	}
 
-	public List<AcaoVirtual> getLista() {
-		FacesContext context = FacesContext.getCurrentInstance();
-		ContextoBean contextoBean = ContextoUtil.getContextoBean();
-		AcaoRN acaoRN = new AcaoRN();
+	public List<AcaoVirtual> getLista() throws Exception {
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getLoginUsuarioLogado());
+		
 		try {
 			if (this.lista == null) {
-				this.lista = acaoRN.listarAcaoVirtual(contextoBean.getUsuarioLogado());
+				this.lista = acaoRN.listarAcaoVirtual(usuarioLogado);
 			}
-		} catch (RNException e) {
-			context.addMessage(null, new FacesMessage(e.getMessage()));
+		} catch (RNException e) {			
+			throw new Exception(e.getMessage());	
 		}
 		return this.lista;
 	}
 
-	public String getLinkCodigoAcao() {
-		AcaoRN acaoRN = new AcaoRN();
+	public String getLinkCodigoAcao() {		
 		if (this.selecionada != null) {
 			this.linkCodigoAcao = acaoRN.montaLinkAcao(this.selecionada.getAcao());
 		} else {
-			this.linkCodigoAcao = YahooFinanceUtil.INDICE_BOVESPA;
+			this.linkCodigoAcao = YahooProperties.INDICE_BOVESPA;
 		}
 		return this.linkCodigoAcao;
 	}
-
-	public AcaoVirtual getSelecionada() {
-		return this.selecionada;
-	}
-
-	public void setLinkCodigoAcao(String linkCodigoAcao) {
-		this.linkCodigoAcao = linkCodigoAcao;
-	}
-
-	public void setLista(List<AcaoVirtual> lista) {
-		this.lista = lista;
-	}
-
-	public void setSelecionada(AcaoVirtual selecionada) {
-		this.selecionada = selecionada;
-	}
+	
 }

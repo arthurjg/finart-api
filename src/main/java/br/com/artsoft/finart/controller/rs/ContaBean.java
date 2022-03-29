@@ -1,14 +1,9 @@
 package br.com.artsoft.finart.controller.rs;
 
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-
-import org.primefaces.model.StreamedContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,14 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.artsoft.finart.controller.rs.util.ContextoUtil;
-import br.com.artsoft.finart.controller.rs.util.RelatorioUtil;
+import br.com.artsoft.finart.controller.util.ContextoUtil;
 import br.com.artsoft.finart.model.domain.Conta;
-import br.com.artsoft.finart.model.domain.Lancamento;
 import br.com.artsoft.finart.model.domain.Usuario;
 import br.com.artsoft.finart.model.service.ContaRN;
-import br.com.artsoft.finart.model.service.LancamentoRN;
-import financeiro.util.UtilException;
+import br.com.artsoft.finart.model.service.UsuarioRN;
 
 @RestController
 @RequestMapping("/conta")
@@ -35,13 +27,15 @@ public class ContaBean {
 	
 	@Autowired
 	ContaRN contaRN;	
+	
+	@Autowired
+	UsuarioRN usuarioRN;	
 
 	@PostMapping
 	public ResponseEntity<Conta> salvar(@RequestBody Conta conta) {
 		
-		ContextoBean contextoBean = ContextoUtil.getContextoBean();		
-		Usuario usuariologado = contextoBean.getUsuarioLogado();
-		conta.setUsuario( usuariologado );
+		Usuario usuarioLogado = usuarioRN.buscarPorLogin(ContextoUtil.getLoginUsuarioLogado());
+		conta.setUsuario( usuarioLogado );
 		
 		contaRN.salvar(conta);	
 		
@@ -79,9 +73,9 @@ public class ContaBean {
 	@GetMapping
 	public ResponseEntity<List<Conta>> getLista() { 
 		
-		ContextoBean contextoBean = ContextoUtil.getContextoBean();
+		Usuario usuarioLogado = usuarioRN.buscarPorLogin(ContextoUtil.getLoginUsuarioLogado());
 
-		List<Conta> lista = contaRN.listar(contextoBean.getUsuarioLogado());
+		List<Conta> lista = contaRN.listar(usuarioLogado);
 		
 		return ResponseEntity.ok(lista);
 	}

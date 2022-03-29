@@ -50,6 +50,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.data.annotation.CreatedDate;
 
 
 @Entity
@@ -86,10 +87,7 @@ public class Lancamento implements Serializable {
 	private Date	           data;
 	private String	           descricao;
 	@Column(precision = 10, scale = 2)
-	private BigDecimal	     valor;
-	
-	@OneToOne(fetch = FetchType.LAZY, mappedBy = "lancamento")
-	private Cheque	     cheque;
+	private BigDecimal	     valor;	
 
 	public Integer getLancamento() {
 		return lancamento;
@@ -145,23 +143,14 @@ public class Lancamento implements Serializable {
 
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
-	}
-
-	public void setCheque(Cheque cheque) {
-		this.cheque = cheque;
-	}
-
-	public Cheque getCheque() {
-		return cheque;
-	}
+	}	
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((categoria == null) ? 0 : categoria.hashCode());
-		result = prime * result + ((cheque == null) ? 0 : cheque.hashCode());
+				+ ((categoria == null) ? 0 : categoria.hashCode());		
 		result = prime * result + ((conta == null) ? 0 : conta.hashCode());
 		result = prime * result + ((data == null) ? 0 : data.hashCode());
 		result = prime * result
@@ -186,12 +175,7 @@ public class Lancamento implements Serializable {
 			if (other.categoria != null)
 				return false;
 		} else if (!categoria.equals(other.categoria))
-			return false;
-		if (cheque == null) {
-			if (other.cheque != null)
-				return false;
-		} else if (!cheque.equals(other.cheque))
-			return false;
+			return false;		
 		if (conta == null) {
 			if (other.conta != null)
 				return false;

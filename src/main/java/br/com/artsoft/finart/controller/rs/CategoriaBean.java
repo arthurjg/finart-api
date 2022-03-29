@@ -44,16 +44,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.artsoft.finart.controller.rs.util.ContextoUtil;
+import br.com.artsoft.finart.controller.util.ContextoUtil;
 import br.com.artsoft.finart.model.domain.Categoria;
+import br.com.artsoft.finart.model.domain.Usuario;
 import br.com.artsoft.finart.model.service.CategoriaRN;
+import br.com.artsoft.finart.model.service.UsuarioRN;
 
 @RestController
 @RequestMapping("/categoria")
 public class CategoriaBean {
 
 	@Autowired
-	CategoriaRN categoriaRN;		
+	CategoriaRN categoriaRN;	
+	
+	@Autowired
+	UsuarioRN usuarioRN;	
 
 	@PostMapping
 	public ResponseEntity<Categoria> salvar(@RequestBody Categoria categoria) {
@@ -65,9 +70,9 @@ public class CategoriaBean {
 		
 		categoria.setPai(pai);		
 		
-		ContextoBean contextoBean = ContextoUtil.getContextoBean();
+		Usuario usuarioLogado = usuarioRN.buscarPorLogin(ContextoUtil.getLoginUsuarioLogado());
 		
-		categoria.setUsuario(contextoBean.getUsuarioLogado());
+		categoria.setUsuario(usuarioLogado);
 		categoriaRN.salvar(categoria);
 		
 		return ResponseEntity.ok(categoria);
@@ -91,9 +96,9 @@ public class CategoriaBean {
 	@GetMapping
 	public ResponseEntity<List<Categoria>> getCategoriasTree() {
 		
-		ContextoBean contextoBean = ContextoUtil.getContextoBean();
+		Usuario usuarioLogado = usuarioRN.buscarPorLogin(ContextoUtil.getLoginUsuarioLogado());
 		
-		List<Categoria> categorias = categoriaRN.listar(contextoBean.getUsuarioLogado());		
+		List<Categoria> categorias = categoriaRN.listar(usuarioLogado);		
 		
 		return ResponseEntity.ok(categorias);		
 	}

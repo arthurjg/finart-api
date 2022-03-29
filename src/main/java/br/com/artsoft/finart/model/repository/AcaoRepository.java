@@ -1,6 +1,6 @@
 /*
- * Código-fonte do livro "Programação Java para a Web"
- * Autores: Décio Heinzelmann Luckow <decioluckow@gmail.com>
+ * Cï¿½digo-fonte do livro "Programaï¿½ï¿½o Java para a Web"
+ * Autores: Dï¿½cio Heinzelmann Luckow <decioluckow@gmail.com>
  *          Alexandre Altair de Melo <alexandremelo.br@gmail.com>
  *
  * ISBN: 978-85-7522-238-6
@@ -8,14 +8,14 @@
  * http://www.novatec.com.br/livros/javaparaweb
  * Editora Novatec, 2010 - todos os direitos reservados
  *
- * LICENÇA: Este arquivo-fonte está sujeito a Atribuição 2.5 Brasil, da licença Creative Commons,
- * que encontra-se disponível no seguinte endereço URI: http://creativecommons.org/licenses/by/2.5/br/
- * Se você não recebeu uma cópia desta licença, e não conseguiu obtê-la pela internet, por favor,
- * envie uma notificação aos seus autores para que eles possam enviá-la para você imediatamente.
+ * LICENï¿½A: Este arquivo-fonte estï¿½ sujeito a Atribuiï¿½ï¿½o 2.5 Brasil, da licenï¿½a Creative Commons,
+ * que encontra-se disponï¿½vel no seguinte endereï¿½o URI: http://creativecommons.org/licenses/by/2.5/br/
+ * Se vocï¿½ nï¿½o recebeu uma cï¿½pia desta licenï¿½a, e nï¿½o conseguiu obtï¿½-la pela internet, por favor,
+ * envie uma notificaï¿½ï¿½o aos seus autores para que eles possam enviï¿½-la para vocï¿½ imediatamente.
  *
  *
- * Source-code of "Programação Java para a Web" book
- * Authors: Décio Heinzelmann Luckow <decioluckow@gmail.com>
+ * Source-code of "Programaï¿½ï¿½o Java para a Web" book
+ * Authors: Dï¿½cio Heinzelmann Luckow <decioluckow@gmail.com>
  *          Alexandre Altair de Melo <alexandremelo.br@gmail.com>
  *
  * ISBN: 978-85-7522-238-6
@@ -29,14 +29,14 @@
  * send a note to the authors so they can mail you a copy immediately.
  *
  */
-package financeiro.dao;
+package br.com.artsoft.finart.model.repository;
 
 import java.util.List;
 
-import financeiro.model.Acao;
-import financeiro.model.Usuario;
+import br.com.artsoft.finart.model.domain.Acao;
+import br.com.artsoft.finart.model.domain.Usuario;
 
-public interface AcaoDAO {
+public interface AcaoRepository {
 
 	public void salvar(Acao acao);
 

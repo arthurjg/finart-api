@@ -1,6 +1,6 @@
 /*
- * Código-fonte do livro "Programação Java para a Web"
- * Autores: Décio Heinzelmann Luckow <decioluckow@gmail.com>
+ * Cï¿½digo-fonte do livro "Programaï¿½ï¿½o Java para a Web"
+ * Autores: Dï¿½cio Heinzelmann Luckow <decioluckow@gmail.com>
  *          Alexandre Altair de Melo <alexandremelo.br@gmail.com>
  *
  * ISBN: 978-85-7522-238-6
@@ -8,14 +8,14 @@
  * http://www.novatec.com.br/livros/javaparaweb
  * Editora Novatec, 2010 - todos os direitos reservados
  *
- * LICENÇA: Este arquivo-fonte está sujeito a Atribuição 2.5 Brasil, da licença Creative Commons,
- * que encontra-se disponível no seguinte endereço URI: http://creativecommons.org/licenses/by/2.5/br/
- * Se você não recebeu uma cópia desta licença, e não conseguiu obtê-la pela internet, por favor,
- * envie uma notificação aos seus autores para que eles possam enviá-la para você imediatamente.
+ * LICENï¿½A: Este arquivo-fonte estï¿½ sujeito a Atribuiï¿½ï¿½o 2.5 Brasil, da licenï¿½a Creative Commons,
+ * que encontra-se disponï¿½vel no seguinte endereï¿½o URI: http://creativecommons.org/licenses/by/2.5/br/
+ * Se vocï¿½ nï¿½o recebeu uma cï¿½pia desta licenï¿½a, e nï¿½o conseguiu obtï¿½-la pela internet, por favor,
+ * envie uma notificaï¿½ï¿½o aos seus autores para que eles possam enviï¿½-la para vocï¿½ imediatamente.
  *
  *
- * Source-code of "Programação Java para a Web" book
- * Authors: Décio Heinzelmann Luckow <decioluckow@gmail.com>
+ * Source-code of "Programaï¿½ï¿½o Java para a Web" book
+ * Authors: Dï¿½cio Heinzelmann Luckow <decioluckow@gmail.com>
  *          Alexandre Altair de Melo <alexandremelo.br@gmail.com>
  *
  * ISBN: 978-85-7522-238-6
@@ -29,27 +29,27 @@
  * send a note to the authors so they can mail you a copy immediately.
  *
  */
-package financeiro.rn;
+package br.com.artsoft.finart.model.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import financeiro.dao.AcaoDAO;
-import financeiro.model.Acao;
-import financeiro.model.AcaoVirtual;
-import financeiro.model.Usuario;
-import financeiro.util.DAOFactory;
-import financeiro.util.RNException;
-import financeiro.web.util.YahooFinanceUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import br.com.artsoft.finart.model.domain.Acao;
+import br.com.artsoft.finart.model.domain.AcaoVirtual;
+import br.com.artsoft.finart.model.domain.Usuario;
+import br.com.artsoft.finart.model.exception.RNException;
+import br.com.artsoft.finart.model.repository.AcaoRepository;
+import br.com.artsoft.finart.model.service.yahoofinance.YahooProperties;
 
 public class AcaoRN {
 
-	private AcaoDAO	acaoDAO;
-
-	public AcaoRN() {
-		this.acaoDAO = DAOFactory.criarAcaoDAO();
-	}
+	private AcaoRepository	acaoDAO;	
+	
+	@Autowired
+	YahooFinanceComponent yahooFinance;
 
 	public void salvar(Acao acao) {
 		this.acaoDAO.salvar(acao);
@@ -81,7 +81,7 @@ public class AcaoRN {
 			for (Acao acao : listaAcao) {
 				acaoVirtual = new AcaoVirtual();
 				acaoVirtual.setAcao(acao);
-				cotacao = this.retornaCotacao(YahooFinanceUtil.ULTIMO_PRECO_DIA_ACAO_INDICE, acao);
+				cotacao = this.retornaCotacao(YahooProperties.ULTIMO_PRECO_DIA_ACAO_INDICE, acao);
 				if (cotacao != null) {
 					ultimoPreco = new Float(cotacao).floatValue();
 					quantidade = acao.getQuantidade();
@@ -92,19 +92,17 @@ public class AcaoRN {
 				}
 			}
 		} catch (RNException e) {
-			throw new RNException("Não foi possível listar ações. Erro: " + e.getMessage());
+			throw new RNException("Nï¿½o foi possï¿½vel listar aï¿½ï¿½es. Erro: " + e.getMessage());
 		}
 		return listaAcaoVirtual;
 	}
 
-	public String retornaCotacao(int indiceInformacao, Acao acao) throws RNException {
-		YahooFinanceUtil yahooFinanceUtil = null;
+	public String retornaCotacao(int indiceInformacao, Acao acao) throws RNException {		
 		String informacao = null;
-		try {
-			yahooFinanceUtil = new YahooFinanceUtil(acao);
-			informacao = yahooFinanceUtil.retornaCotacao(indiceInformacao, acao.getSigla());
+		try {			
+			informacao = yahooFinance.retornaCotacao(acao, indiceInformacao, acao.getSigla());
 		} catch (IOException e) {
-			throw new RNException("Não foi possível recuperar cotação. Erro: " + e.getMessage());
+			throw new RNException("NÃ£o foi possÃ­vel recuperar cotaÃ§Ã£o. Erro: " + e.getMessage());
 		}
 		return informacao;
 	}
@@ -113,16 +111,16 @@ public class AcaoRN {
 		String link = null;
 		if (acao != null) {
 			if (acao.getOrigem() != null) {
-				if (acao.getOrigem() == YahooFinanceUtil.ORIGEM_BOVESPA) {
-					link = acao.getSigla() + YahooFinanceUtil.POSFIXO_ACAO_BOVESPA;
+				if (acao.getOrigem() == YahooProperties.ORIGEM_BOVESPA) {
+					link = acao.getSigla() + YahooProperties.POSFIXO_ACAO_BOVESPA;
 				} else {
 					link = acao.getSigla();
 				}
 			} else {
-				link = YahooFinanceUtil.INDICE_BOVESPA;
+				link = YahooProperties.INDICE_BOVESPA;
 			}
 		} else {
-			link = YahooFinanceUtil.INDICE_BOVESPA;
+			link = YahooProperties.INDICE_BOVESPA;
 		}
 		return link;
 	}
