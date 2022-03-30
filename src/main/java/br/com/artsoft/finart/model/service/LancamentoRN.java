@@ -34,52 +34,42 @@ package br.com.artsoft.finart.model.service;
 import java.util.Date;
 import java.util.List;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.com.artsoft.finart.model.domain.Conta;
 import br.com.artsoft.finart.model.domain.Lancamento;
 import br.com.artsoft.finart.model.repository.LancamentoRepository;
 
-
+@Service
 public class LancamentoRN {
 	
 	@Autowired
-	private LancamentoRepository	lancamentoRepository;
-
-	public LancamentoRN() {		
-	}
+	private LancamentoRepository	lancamentoRepository;		
 	
-	@Transactional
 	public void salvar(Lancamento lancamento) {
-		this.lancamentoRepository.salvar(lancamento);
-	}
+		lancamentoRepository.save(lancamento);
+	}	
 	
-	@Transactional
 	public void atualizar(Lancamento lancamento) {
-		this.lancamentoRepository.atualizar(lancamento);
-	}
+		lancamentoRepository.save(lancamento);
+	}	
 	
-	@Transactional
 	public void excluir(Lancamento lancamento) {
-		this.lancamentoRepository.excluir(lancamento);
-	}
+		lancamentoRepository.delete(lancamento);
+	}	
 	
-	@Transactional
 	public Lancamento carregar(Integer lancamento) {
-		return this.lancamentoRepository.carregar(lancamento);
-	}
+		return lancamentoRepository.findById(lancamento).get();
+	}	
 	
-	@Transactional
 	public float saldo(Conta conta, Date data) { 
 		float saldoInicial = conta.getSaldoInicial();
 		float saldoNaData = this.lancamentoRepository.saldo(conta, data);
 		return saldoInicial + saldoNaData;
-	}
+	}	
 	
-	@Transactional
 	public List<Lancamento> listar(Conta conta, Date dataInicio, Date dataFim) { 
-		return this.lancamentoRepository.listar(conta, dataInicio, dataFim);
+		return lancamentoRepository.listar(conta, dataInicio, dataFim);
 	}
 }

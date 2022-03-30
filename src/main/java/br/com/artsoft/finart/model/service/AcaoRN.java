@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.com.artsoft.finart.model.domain.Acao;
 import br.com.artsoft.finart.model.domain.AcaoVirtual;
@@ -44,27 +45,29 @@ import br.com.artsoft.finart.model.exception.RNException;
 import br.com.artsoft.finart.model.repository.AcaoRepository;
 import br.com.artsoft.finart.model.service.yahoofinance.YahooProperties;
 
+@Service
 public class AcaoRN {
 
-	private AcaoRepository	acaoDAO;	
+	@Autowired
+	private AcaoRepository	acaoRepository;	
 	
 	@Autowired
 	YahooFinanceComponent yahooFinance;
 
 	public void salvar(Acao acao) {
-		this.acaoDAO.salvar(acao);
+		acaoRepository.save(acao);
 	}
 
 	public void excluir(Acao acao) {
-		this.acaoDAO.excluir(acao);
+		acaoRepository.delete(acao);
 	}
 
-	public Acao carregar(String codigo) {
-		return this.acaoDAO.carregar(codigo);
+	public Acao carregar(Integer codigo) {
+		return acaoRepository.findById(codigo).get();
 	}
 
 	public List<Acao> listar(Usuario usuario) {
-		return this.acaoDAO.listar(usuario);
+		return acaoRepository.findAllByUsuario(usuario);
 	}
 
 	public List<AcaoVirtual> listarAcaoVirtual(Usuario usuario) throws RNException {

@@ -1,17 +1,14 @@
 package br.com.artsoft.finart.model.repository;
 
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import br.com.artsoft.finart.model.domain.Usuario;
 
-public interface UsuarioRepository {
+@Repository
+public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {	
 	
-	public void salvar( Usuario usuario );
-	public void atualizar( Usuario usuario );
-	public void excluir( Usuario usuario );
-	public Usuario carregar( Integer codigo );
-	public Usuario buscarPorLogin( String login );
-	public Usuario buscarPorEmail( String email );
-	public List<Usuario> listar();
+	public Usuario findByLogin( String login );
+	public Usuario findByEmail( String email );	
 
 }

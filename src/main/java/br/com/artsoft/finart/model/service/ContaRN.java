@@ -2,56 +2,55 @@ package br.com.artsoft.finart.model.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.com.artsoft.finart.model.domain.Conta;
 import br.com.artsoft.finart.model.domain.Usuario;
 import br.com.artsoft.finart.model.repository.ContaRepository;
 
-
+@Service
 public class ContaRN {
 	
 	@Autowired
-	private ContaRepository contaRepository;
-
-	public ContaRN() {		
-	}
+	private ContaRepository contaRepository;	
 
 	public List<Conta> listar(Usuario usuario) {	
-		List<Conta> lista = this.contaRepository.listar(usuario);
+		List<Conta> lista = contaRepository.findAllByUsuario(usuario);
 		return somarSaldoLista(lista);
 	}
 
 	public Conta carregar(Integer conta) {
-		return this.contaRepository.carregar(conta);
+		return contaRepository.findById(conta).get();
 	}
 
 	public void salvar(Conta conta) {
 		conta.setDataCadastro(new Date());
-		this.contaRepository.salvar(conta);
+		contaRepository.save(conta);
 	}
 
 	public void excluir(Conta conta) {
-		Conta contaPersistida = this.contaRepository.carregar(conta.getConta());
-		if(contaPersistida != null){
-			this.contaRepository.excluir(contaPersistida);
+		Optional<Conta> contaPersistida = contaRepository.findById(conta.getConta());
+		if(contaPersistida.isPresent()){
+			contaRepository.delete(conta);
 		}		
 	}
 
 	public void tornarFavorita(Conta contaFavorita) { 
-		Conta conta = this.buscarFavorita(contaFavorita.getUsuario());
+		Conta conta = buscarFavorita(contaFavorita.getUsuario());
 		if (conta != null) {
 			conta.setFavorita(false);
-			this.contaRepository.salvar(conta);
+			contaRepository.save(conta);
 		}
 
 		contaFavorita.setFavorita(true);
-		this.contaRepository.salvar(contaFavorita);
+		contaRepository.save(contaFavorita);
 	}
 
 	public Conta buscarFavorita(Usuario usuario) {
-		return this.contaRepository.buscarFavorita(usuario);
+		return contaRepository.findByUsuarioAndFavorita(usuario, true);
 	}
 	
 	public List<Conta> somarSaldoLista(List<Conta> lista) {

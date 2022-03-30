@@ -34,20 +34,25 @@ package br.com.artsoft.finart.model.repository;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
 import br.com.artsoft.finart.model.domain.Conta;
 import br.com.artsoft.finart.model.domain.Lancamento;
 
-public interface LancamentoRepository {
+@Repository
+public interface LancamentoRepository extends JpaRepository<Lancamento, Integer> {	
 
-	public void salvar(Lancamento lancamento);
+	@Query("select lan from Lancamento lan where lan.conta = :conta"
+			+ " and lan.data between :dataInicio and :dataFim")
+	public List<Lancamento> listar(Conta conta, Date dataInicio, Date dataFim);	
 	
-	public void atualizar(Lancamento lancamento);
-
-	public void excluir(Lancamento lancamento);
-
-	public Lancamento carregar(Integer lancamento);
-
-	public List<Lancamento> listar(Conta conta, Date dataInicio, Date dataFim);
-
+	@Query(value = "select sum(l.valor * c.fator)"
+			+ "  from Lancamento l,"
+			+ "	     Categoria c"
+			+ " where l.categoria = c.codigo"
+			+ "   and l.conta = :conta"
+			+ "   and l.data <= :data")
 	public float saldo(Conta conta, Date data);
 }

@@ -33,17 +33,15 @@ package br.com.artsoft.finart.model.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
 import br.com.artsoft.finart.model.domain.Acao;
 import br.com.artsoft.finart.model.domain.Usuario;
 
-public interface AcaoRepository {
+@Repository
+public interface AcaoRepository extends JpaRepository<Acao, Integer> {		
 
-	public void salvar(Acao acao);
-
-	public void excluir(Acao acao);
-
-	public Acao carregar(String codigo);
-
-	public List<Acao> listar(Usuario usuario);
+	public List<Acao> findAllByUsuario(Usuario usuario);
 
 }

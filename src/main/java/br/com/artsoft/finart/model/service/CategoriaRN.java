@@ -35,11 +35,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import br.com.artsoft.finart.model.domain.Categoria;
 import br.com.artsoft.finart.model.domain.Usuario;
 import br.com.artsoft.finart.model.repository.CategoriaRepository;
 
+@Service
 public class CategoriaRN {
 	
 	@Autowired	
@@ -53,7 +55,7 @@ public class CategoriaRN {
 	}
 
 	public List<Categoria> listar(Usuario usuario) {
-		return this.categoriaRepository.listar(usuario);
+		return categoriaRepository.findAllByUsuario(usuario);
 	}
 
 	
@@ -68,11 +70,11 @@ public class CategoriaRN {
 		boolean mudouFator = pai.getFator() != categoria.getFator();
 
 		categoria.setFator(pai.getFator());
-		categoria = this.categoriaRepository.salvar(categoria);
+		categoria = categoriaRepository.save(categoria);
 
 		if (mudouFator) {
-			categoria = this.carregar(categoria.getCodigo());
-			this.replicarFator(categoria, categoria.getFator());
+			categoria = carregar(categoria.getCodigo());
+			replicarFator(categoria, categoria.getFator());
 		}
 
 		return categoria;
@@ -82,8 +84,8 @@ public class CategoriaRN {
 		if (categoria.getFilhos() != null) {
 			for (Categoria filho : categoria.getFilhos()) {
 				filho.setFator(fator);
-				this.categoriaRepository.salvar(filho);
-				this.replicarFator(filho, fator);
+				categoriaRepository.save(filho);
+				replicarFator(filho, fator);
 			}
 		}
 	}
@@ -94,26 +96,26 @@ public class CategoriaRN {
 		//OrcamentoRN orcamentoRN = new OrcamentoRN();
 		//orcamentoRN.excluir(categoria);
 
-		this.categoriaRepository.excluir(categoria);
+		categoriaRepository.delete(categoria);
 	}
 	
 	
 	public void excluir(Usuario usuario) {
-		List<Categoria> lista = this.listar(usuario);
+		List<Categoria> lista = listar(usuario);
 		for (Categoria categoria:lista) {
-			this.categoriaRepository.excluir(categoria);
+			categoriaRepository.delete(categoria);
 		}
 	}
 
-	public Categoria carregar(Integer categoria) {
-		return this.categoriaRepository.carregar(categoria);
+	public Categoria carregar(Integer categoria) {		
+		return categoriaRepository.findById(categoria).get();
 	}
 	
 	public List<Integer> carregarCodigos(Integer categoria) {
 		List<Integer> codigos = new ArrayList<Integer>();
 		
-		Categoria c = this.carregar(categoria);
-		this.extraiCodigos(codigos, c);
+		Categoria c = carregar(categoria);
+		extraiCodigos(codigos, c);
 		
 		return codigos;
 	}
@@ -122,30 +124,29 @@ public class CategoriaRN {
 		codigos.add(categoria.getCodigo());
 		if (categoria.getFilhos() != null) {
 			for (Categoria filho:categoria.getFilhos()) {
-				this.extraiCodigos(codigos, filho);
+				extraiCodigos(codigos, filho);
 			}
 		}
 	}
-
 	
 	public void salvaEstruturaPadrao(Usuario usuario) {
 
 		Categoria despesas = new Categoria(null, usuario, "DESPESAS", -1);
-		despesas = this.categoriaRepository.salvar(despesas);
-		this.categoriaRepository.salvar(new Categoria(despesas, usuario, "Moradia", -1));
-		this.categoriaRepository.salvar(new Categoria(despesas, usuario, "Alimenta��o", -1));
-		this.categoriaRepository.salvar(new Categoria(despesas, usuario, "Vestu�rio", -1));
-		this.categoriaRepository.salvar(new Categoria(despesas, usuario, "Deslocamento", -1));
-		this.categoriaRepository.salvar(new Categoria(despesas, usuario, "Cuidados Pessoais", -1));
-		this.categoriaRepository.salvar(new Categoria(despesas, usuario, "Educa��o", -1));
-		this.categoriaRepository.salvar(new Categoria(despesas, usuario, "Sa�de", -1));
-		this.categoriaRepository.salvar(new Categoria(despesas, usuario, "Lazer", -1));
-		this.categoriaRepository.salvar(new Categoria(despesas, usuario, "Despesas Financeiras", -1));
+		despesas = categoriaRepository.save(despesas);
+		categoriaRepository.save(new Categoria(despesas, usuario, "Moradia", -1));
+		categoriaRepository.save(new Categoria(despesas, usuario, "Alimentação", -1));
+		categoriaRepository.save(new Categoria(despesas, usuario, "Vestuário", -1));
+		categoriaRepository.save(new Categoria(despesas, usuario, "Deslocamento", -1));
+		categoriaRepository.save(new Categoria(despesas, usuario, "Cuidados Pessoais", -1));
+		categoriaRepository.save(new Categoria(despesas, usuario, "Educação", -1));
+		categoriaRepository.save(new Categoria(despesas, usuario, "Saúde", -1));
+		categoriaRepository.save(new Categoria(despesas, usuario, "Lazer", -1));
+		categoriaRepository.save(new Categoria(despesas, usuario, "Despesas Financeiras", -1));
 
 		Categoria receitas = new Categoria(null, usuario, "RECEITAS", 1);
-		receitas = this.categoriaRepository.salvar(receitas);
-		this.categoriaRepository.salvar(new Categoria(receitas, usuario, "Sal�rio", 1));
-		this.categoriaRepository.salvar(new Categoria(receitas, usuario, "Restitui��es", 1));
-		this.categoriaRepository.salvar(new Categoria(receitas, usuario, "Rendimento", 1));
+		receitas = categoriaRepository.save(receitas);
+		categoriaRepository.save(new Categoria(receitas, usuario, "Salário", 1));
+		categoriaRepository.save(new Categoria(receitas, usuario, "Restituições", 1));
+		categoriaRepository.save(new Categoria(receitas, usuario, "Rendimento", 1));
 	}
 }
