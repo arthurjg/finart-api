@@ -23,7 +23,7 @@ import br.com.artsoft.finart.model.service.UsuarioRN;
 
 @RestController
 @RequestMapping("/conta")
-public class ContaBean {
+public class ContaRS {
 	
 	@Autowired
 	ContaRN contaRN;	

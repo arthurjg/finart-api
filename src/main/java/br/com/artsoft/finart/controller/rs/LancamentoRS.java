@@ -57,7 +57,7 @@ import br.com.artsoft.finart.model.service.LancamentoRN;
 
 @RestController
 @RequestMapping("/lancamento")
-public class LancamentoBean {
+public class LancamentoRS {
 
 	@Autowired
 	LancamentoRN lancamentoRN;		

@@ -34,6 +34,13 @@ package br.com.artsoft.finart.controller.rs;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.artsoft.finart.controller.util.ContextoUtil;
@@ -43,57 +50,56 @@ import br.com.artsoft.finart.model.domain.Usuario;
 import br.com.artsoft.finart.model.exception.RNException;
 import br.com.artsoft.finart.model.service.AcaoRN;
 import br.com.artsoft.finart.model.service.ContextoRN;
-import br.com.artsoft.finart.model.service.yahoofinance.YahooProperties;
 
 @RestController
-public class AcaoBean {
+@RequestMapping("/acao")
+public class AcaoRS {
 
 	@Autowired
 	ContextoRN contextoRN;
 	
 	@Autowired
-	AcaoRN acaoRN;
-	
-	private AcaoVirtual			selecionada		= new AcaoVirtual();
-	private List<AcaoVirtual>	lista				= null;
-	private String					linkCodigoAcao	= null;
+	AcaoRN acaoRN;		
 
-	public void salvar() {
+	@PostMapping
+	public ResponseEntity<Acao> salvar(@RequestBody AcaoVirtual acaoVirtual) throws Exception {		
 		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getLoginUsuarioLogado());		
-		Acao acao = this.selecionada.getAcao();
+		Acao acao = acaoVirtual.getAcao();
 		acao.setSigla(acao.getSigla().toUpperCase());
 		acao.setUsuario(usuarioLogado);
-		acaoRN.salvar(acao);
-		this.selecionada = new AcaoVirtual();
-		this.lista = null;
-	}
-
-	public void excluir() {		
-		acaoRN.excluir(this.selecionada.getAcao());
-		this.selecionada = new AcaoVirtual();
-		this.lista = null;
-	}
-
-	public List<AcaoVirtual> getLista() throws Exception {
-		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getLoginUsuarioLogado());
+		acaoRN.salvar(acao);	
 		
-		try {
-			if (this.lista == null) {
-				this.lista = acaoRN.listarAcaoVirtual(usuarioLogado);
-			}
+		return ResponseEntity.ok(acao);
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Acao> excluir(@PathVariable("id") Integer codigo) {	
+		
+		Acao acao = acaoRN.carregar(codigo);
+		acaoRN.excluir(acao);	
+		
+		return ResponseEntity.ok(acao);
+	}
+
+	@GetMapping
+	public ResponseEntity<List<AcaoVirtual>> getLista() throws Exception {
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getLoginUsuarioLogado());
+		List<AcaoVirtual>	lista;
+		try {			
+			lista = acaoRN.listarAcaoVirtual(usuarioLogado);			
 		} catch (RNException e) {			
 			throw new Exception(e.getMessage());	
 		}
-		return this.lista;
+		return ResponseEntity.ok(lista);
 	}
 
-	public String getLinkCodigoAcao() {		
+	/*public String getLinkCodigoAcao() {		
 		if (this.selecionada != null) {
 			this.linkCodigoAcao = acaoRN.montaLinkAcao(this.selecionada.getAcao());
 		} else {
 			this.linkCodigoAcao = YahooProperties.INDICE_BOVESPA;
 		}
 		return this.linkCodigoAcao;
-	}
+	}*/
 	
 }

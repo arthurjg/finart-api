@@ -52,7 +52,7 @@ import br.com.artsoft.finart.model.service.UsuarioRN;
 
 @RestController
 @RequestMapping("/categoria")
-public class CategoriaBean {
+public class CategoriaRS {
 
 	@Autowired
 	CategoriaRN categoriaRN;	
