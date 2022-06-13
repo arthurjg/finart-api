@@ -23,10 +23,7 @@ import java.util.stream.Collectors;
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
 	private static final String HEADER = "Authorization";
-	private static final String PREFIX = "Bearer ";
-	
-	//@Value("${vvautorizacao.endpoint}")
-	//private String endpointValidateToken;
+	private static final String PREFIX = "Bearer ";	
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

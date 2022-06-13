@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -13,14 +15,12 @@ import javax.persistence.ManyToMany;
 
 import org.hibernate.annotations.NaturalId;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
 @Entity
-@AllArgsConstructor
 public class Usuario implements Serializable{	
 	
 	private static final long serialVersionUID = 1L;
@@ -28,6 +28,23 @@ public class Usuario implements Serializable{
 	public Usuario() {
 		permissoes = new ArrayList<>();
 	}
+	
+	public Usuario(Integer codigo, String nome, String login, String email, String senha, LocalDate nascimento,
+			String celular, String idioma, boolean ativo, List<Permissao> permissoes) {		
+		this();
+		this.codigo = codigo;
+		this.nome = nome;
+		this.login = login;
+		this.email = email;
+		this.senha = senha;
+		this.nascimento = nascimento;
+		this.celular = celular;
+		this.idioma = idioma;
+		this.ativo = ativo;
+		if(!Objects.isNull(permissoes) && !permissoes.isEmpty()) {
+			this.permissoes.addAll(permissoes);
+		}		
+	}		
 	
 	@Id
 	@GeneratedValue
@@ -43,7 +60,7 @@ public class Usuario implements Serializable{
 	private String idioma;	
 	private boolean ativo;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private List<Permissao> permissoes;		
 	
 	public boolean isAtivo() {

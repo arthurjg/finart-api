@@ -20,7 +20,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {		
 		http.csrf().disable().formLogin().disable()
 				.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-				.authorizeRequests().antMatchers("/api/**", "/teste/", "/swagger*/**", "/webjars/**")
+				.authorizeRequests()
+				.antMatchers("/api/**", "/teste/", "/swagger*/**", "/webjars/**", "/usuarios/registro")
 				.permitAll()
 				.anyRequest().authenticated();
 		

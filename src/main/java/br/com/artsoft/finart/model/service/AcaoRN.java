@@ -84,7 +84,7 @@ public class AcaoRN {
 			for (Acao acao : listaAcao) {
 				acaoVirtual = new AcaoVirtual();
 				acaoVirtual.setAcao(acao);
-				cotacao = this.retornaCotacao(YahooProperties.ULTIMO_PRECO_DIA_ACAO_INDICE, acao);
+				cotacao = retornaCotacao(YahooProperties.ULTIMO_PRECO_DIA_ACAO_INDICE, acao);
 				if (cotacao != null) {
 					ultimoPreco = new Float(cotacao).floatValue();
 					quantidade = acao.getQuantidade();

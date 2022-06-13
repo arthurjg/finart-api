@@ -1,5 +1,6 @@
 package br.com.artsoft.finart.controller.rs;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -7,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,18 +24,14 @@ import br.com.artsoft.finart.model.domain.Usuario;
 import br.com.artsoft.finart.model.service.UsuarioRN;
 
 @RestController
-@RequestMapping("/usuario")
+@RequestMapping("/usuarios")
 public class UsuarioRS {
 	
 	@Autowired
 	UsuarioRN usuarioRN;		
 	
-	@PostMapping
-	public ResponseEntity<Usuario> salvar(@RequestBody UsuarioDTO usuario) throws Exception {			
-		
-		if ( !usuario.getSenha().equals( usuario.getConfirmacaoSenha() ) ) {
-			throw new Exception("A senha não foi confirmada corretamente");			
-		}		
+	@PostMapping("/registro")
+	public ResponseEntity<Usuario> salvar(@RequestBody @Validated UsuarioDTO usuario) throws Exception {				
 		
 		Usuario usuarioNovo = UsuarioMapper.map(usuario);
 		usuarioRN.salvar(usuarioNovo);
@@ -48,7 +46,7 @@ public class UsuarioRS {
 			contaRN.salvar(conta);
 		}*/		
 		
-		return ResponseEntity.ok(usuarioNovo);
+		return ResponseEntity.created(URI.create("/usuarios/" + usuarioNovo.getCodigo())).build();
 		
 	}
 	
