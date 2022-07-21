@@ -1,34 +1,22 @@
 package br.com.artsoft.finart.model.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.artsoft.finart.model.domain.Permissao;
 import br.com.artsoft.finart.model.domain.Usuario;
 import br.com.artsoft.finart.model.repository.UsuarioRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
-public class UsuarioRN {
-	 
-	@Autowired
-	private UsuarioRepository usuarioRepo;	
+@RequiredArgsConstructor
+public class UsuarioRN {	 
 	
-	@Autowired
-	private CategoriaRN categoriaRN;
-
-	public UsuarioRN() {			
-	}
+	private final UsuarioRepository usuarioRepo;		
 	
-	public UsuarioRN(UsuarioRepository usuarioRepo) {		
-		this.usuarioRepo = usuarioRepo;
-	}
-	
-	public UsuarioRN(UsuarioRepository usuarioRepo, CategoriaRN categoriaRN) {		
-		this.usuarioRepo = usuarioRepo;
-		this.categoriaRN = categoriaRN;
-	}		
+	private final CategoriaRN categoriaRN;		
 	
 	public Usuario carregar( Integer codigo ){
 		return this.usuarioRepo.getById(codigo);
@@ -40,11 +28,15 @@ public class UsuarioRN {
 	
 	public Usuario buscarPorEmail( String email ){
 		return this.usuarioRepo.findByEmail(email);
-	}	
+	}
+	
+	public Optional<Usuario> buscarPorEmailESenha( String email, String senha ){
+		return this.usuarioRepo.findByEmailAndSenha(email, senha);
+	}
 	
 	public void salvar( Usuario usuario ){
 		Permissao permissao = new Permissao("ROLE_USUARIO");
-		//todo
+		
 		usuario.getPermissoes().add(permissao);
 		this.usuarioRepo.save(usuario);			
 		this.categoriaRN.salvaEstruturaPadrao(usuario);

@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class UsuarioDTO {
+public class UsuarioDTO {	
 	
 	@NotBlank
 	private String nome;
@@ -28,6 +28,6 @@ public class UsuarioDTO {
 	@NotBlank
 	private String senha;	
 	
-	private ContaDTO contaDTO;
+	private ContaDTO contaDTO;		
 
 }
