@@ -49,6 +49,7 @@ public class Usuario implements Serializable{
 	@Id
 	@GeneratedValue
 	private Integer codigo;
+	
 	private String nome;
 	
 	@NaturalId

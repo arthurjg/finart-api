@@ -33,14 +33,15 @@ public class YahooFinanceComponent {
 			indiceInformacao = YahooProperties.ULTIMO_PRECO_DIA_ACAO_INDICE;
 		}
 
-		String endereco = "http://" + this.local + ".finance.yahoo.com/d/quotes.csv?s=" + acao + "&f=sl1d1t1c1ohgv&e=.csv";
+		String endereco = "http://" + this.local + ".finance.yahoo.com/d/quotes.csv?s=" + nomeAcao + "&f=sl1d1t1c1ohgv&e=.csv";
 		String linha = null;
 		URL url = null;
 		String valorRetorno = null;
 
 		try {
 			url = new URL(endereco);
-			URLConnection conexao = url.openConnection();
+			URLConnection conexao = url.openConnection();						
+			
 			InputStreamReader conteudo = new InputStreamReader(conexao.getInputStream());
 			BufferedReader arquivo = new BufferedReader(conteudo);
 
