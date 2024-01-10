@@ -75,7 +75,7 @@ public class LancamentoRS {
 		
 		periodo = 1;	
 		
-		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getLoginUsuarioLogado());
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());
 		
 		lancamento.setUsuario(usuarioLogado);
 		lancamento.setConta(contextoRN.getContaAtiva(usuarioLogado));
@@ -132,7 +132,8 @@ public class LancamentoRS {
 	public List<Lancamento> getListaTodos() {
 		List<Lancamento> lista = null;
 		
-		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getLoginUsuarioLogado());			
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());
+		
 		Conta conta = contextoRN.getContaAtiva(usuarioLogado);
 
 		Calendar dataSaldo = new GregorianCalendar();
@@ -159,7 +160,7 @@ public class LancamentoRS {
 	public List<Lancamento> getListaAteHoje() {
 		List<Lancamento> listaAteHoje = null;
 
-		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getLoginUsuarioLogado());			
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());			
 		Conta conta = contextoRN.getContaAtiva(usuarioLogado);
 
 		Calendar hoje = new GregorianCalendar();
@@ -173,7 +174,7 @@ public class LancamentoRS {
 	public List<Lancamento> getListaFuturos() {
 		List<Lancamento> listaFuturos = null;
 
-		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getLoginUsuarioLogado());			
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());			
 		Conta conta = contextoRN.getContaAtiva(usuarioLogado);
 
 		Calendar amanha = new GregorianCalendar();
@@ -188,7 +189,7 @@ public class LancamentoRS {
 	public List<Lancamento> getListaMes() {
 		List<Lancamento> listaMes = null;
 
-		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getLoginUsuarioLogado());			
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());			
 		Conta conta = contextoRN.getContaAtiva(usuarioLogado);
 
 		Calendar diaPrimeiroDoMes = new GregorianCalendar();
@@ -218,7 +219,7 @@ public class LancamentoRS {
 	public List<Lancamento> getListaMesAnterior() {
 		List<Lancamento> listaMesAnterior;
 
-		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getLoginUsuarioLogado());			
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());			
 		Conta conta = contextoRN.getContaAtiva(usuarioLogado);
 
 		Calendar diaPrimeiroDoMes = new GregorianCalendar();

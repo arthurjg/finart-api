@@ -17,15 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.artsoft.finart.controller.dto.InvestimentoDTO;
 import br.com.artsoft.finart.controller.dto.InvestimentoMapper;
 import br.com.artsoft.finart.controller.util.ContextoUtil;
-import br.com.artsoft.finart.model.domain.Investimento;
 import br.com.artsoft.finart.model.domain.Usuario;
+import br.com.artsoft.finart.model.domain.investimento.Investimento;
 import br.com.artsoft.finart.model.service.ContextoRN;
 import br.com.artsoft.finart.model.service.InvestimentoRN;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/investimento")
+@RequestMapping("/investimentos")
 public class InvestimentoRS {	
 	
 	ContextoRN contextoRN;	
@@ -37,7 +37,7 @@ public class InvestimentoRS {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
 	public void salvar(@RequestBody InvestimentoDTO investimentoDto) throws Exception {		
-		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getLoginUsuarioLogado());		
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());		
 		Investimento investimento = investimentoMapper.map(investimentoDto);
 		
 		investimento.setUsuario(usuarioLogado);
@@ -55,7 +55,7 @@ public class InvestimentoRS {
 
 	@GetMapping
 	public ResponseEntity<List<InvestimentoDTO>> getLista() throws Exception {
-		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getLoginUsuarioLogado());
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());
 		List<InvestimentoDTO> lista;
 				
 		lista = investimentoRN.listar(usuarioLogado)

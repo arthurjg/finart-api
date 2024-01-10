@@ -18,7 +18,7 @@ public class ContextoRN {
 	ContaRN contaRN;	
 	
 	public Usuario getUsuarioLogado(String login) {
-		return  usuarioRN.buscarPorLogin(login);
+		return  usuarioRN.buscarPorEmail(login);
 	}
 	
 	public Conta getContaAtiva(Usuario usuario) {	

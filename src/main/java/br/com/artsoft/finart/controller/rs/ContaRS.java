@@ -19,7 +19,7 @@ import br.com.artsoft.finart.controller.util.ContextoUtil;
 import br.com.artsoft.finart.model.domain.Conta;
 import br.com.artsoft.finart.model.domain.Usuario;
 import br.com.artsoft.finart.model.service.ContaRN;
-import br.com.artsoft.finart.model.service.UsuarioRN;
+import br.com.artsoft.finart.model.service.ContextoRN;
 
 @RestController
 @RequestMapping("/conta")
@@ -29,12 +29,12 @@ public class ContaRS {
 	ContaRN contaRN;	
 	
 	@Autowired
-	UsuarioRN usuarioRN;	
+	ContextoRN contextoRN;		
 
 	@PostMapping
 	public ResponseEntity<Conta> salvar(@RequestBody Conta conta) {
 		
-		Usuario usuarioLogado = usuarioRN.buscarPorLogin(ContextoUtil.getLoginUsuarioLogado());
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());
 		conta.setUsuario( usuarioLogado );
 		
 		contaRN.salvar(conta);	
@@ -73,7 +73,7 @@ public class ContaRS {
 	@GetMapping
 	public ResponseEntity<List<Conta>> getLista() { 
 		
-		Usuario usuarioLogado = usuarioRN.buscarPorLogin(ContextoUtil.getLoginUsuarioLogado());
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());
 
 		List<Conta> lista = contaRN.listar(usuarioLogado);
 		

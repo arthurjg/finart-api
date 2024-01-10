@@ -48,7 +48,7 @@ import br.com.artsoft.finart.controller.util.ContextoUtil;
 import br.com.artsoft.finart.model.domain.Categoria;
 import br.com.artsoft.finart.model.domain.Usuario;
 import br.com.artsoft.finart.model.service.CategoriaRN;
-import br.com.artsoft.finart.model.service.UsuarioRN;
+import br.com.artsoft.finart.model.service.ContextoRN;
 
 @RestController
 @RequestMapping("/categoria")
@@ -58,7 +58,7 @@ public class CategoriaRS {
 	CategoriaRN categoriaRN;	
 	
 	@Autowired
-	UsuarioRN usuarioRN;	
+	ContextoRN contextoRN;	
 
 	@PostMapping
 	public ResponseEntity<Categoria> salvar(@RequestBody Categoria categoria) {
@@ -70,7 +70,7 @@ public class CategoriaRS {
 		
 		categoria.setPai(pai);		
 		
-		Usuario usuarioLogado = usuarioRN.buscarPorLogin(ContextoUtil.getLoginUsuarioLogado());
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());
 		
 		categoria.setUsuario(usuarioLogado);
 		categoriaRN.salvar(categoria);
@@ -96,7 +96,7 @@ public class CategoriaRS {
 	@GetMapping
 	public ResponseEntity<List<Categoria>> getCategoriasTree() {
 		
-		Usuario usuarioLogado = usuarioRN.buscarPorLogin(ContextoUtil.getLoginUsuarioLogado());
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());
 		
 		List<Categoria> categorias = categoriaRN.listar(usuarioLogado);		
 		

@@ -63,7 +63,7 @@ public class AcaoRS {
 
 	@PostMapping
 	public ResponseEntity<Acao> salvar(@RequestBody AcaoVirtual acaoVirtual) throws Exception {		
-		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getLoginUsuarioLogado());		
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());		
 		Acao acao = acaoVirtual.getAcao();
 		acao.setSigla(acao.getSigla().toUpperCase());
 		acao.setUsuario(usuarioLogado);
@@ -83,7 +83,7 @@ public class AcaoRS {
 
 	@GetMapping
 	public ResponseEntity<List<AcaoVirtual>> getLista() throws Exception {
-		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getLoginUsuarioLogado());
+		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());
 		List<AcaoVirtual>	lista;
 		try {			
 			lista = acaoRN.listarAcaoVirtual(usuarioLogado);			
