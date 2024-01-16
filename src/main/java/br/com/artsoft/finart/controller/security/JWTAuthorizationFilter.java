@@ -65,10 +65,10 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
 	private void handlerResponseForCrossOrigen(HttpServletResponse response) {
 		response.setHeader("Access-Control-Allow-Origin", "*");
-		   response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-		   response.setHeader("Access-Control-Max-Age", "3600");
-		   response.setHeader("Access-Control-Allow-Headers", "authorization, content-type, xsrf-token");
-		   response.addHeader("Access-Control-Expose-Headers", "xsrf-token");
+		response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+		response.setHeader("Access-Control-Max-Age", "3600");
+		response.setHeader("Access-Control-Allow-Headers", "authorization, content-type, xsrf-token");
+		response.addHeader("Access-Control-Expose-Headers", "xsrf-token");
 	}
 
 	@SuppressWarnings("unchecked")
