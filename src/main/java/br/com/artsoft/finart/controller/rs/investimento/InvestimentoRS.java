@@ -1,4 +1,4 @@
-package br.com.artsoft.finart.controller.rs;
+package br.com.artsoft.finart.controller.rs.investimento;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,13 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.artsoft.finart.controller.dto.InvestimentoDTO;
-import br.com.artsoft.finart.controller.dto.InvestimentoMapper;
+import br.com.artsoft.finart.controller.investimento.dto.InvestimentoDetalhesDTO;
+import br.com.artsoft.finart.controller.investimento.dto.InvestimentoMapper;
+import br.com.artsoft.finart.controller.investimento.dto.InvestimentoSimplesDTO;
 import br.com.artsoft.finart.controller.util.ContextoUtil;
 import br.com.artsoft.finart.model.domain.Usuario;
 import br.com.artsoft.finart.model.domain.investimento.Investimento;
 import br.com.artsoft.finart.model.service.ContextoRN;
-import br.com.artsoft.finart.model.service.InvestimentoRN;
+import br.com.artsoft.finart.model.service.investimento.InvestimentoService;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -30,18 +31,18 @@ public class InvestimentoRS {
 	
 	ContextoRN contextoRN;	
 	
-	InvestimentoRN investimentoRN;	
+	InvestimentoService investimentoRN;	
 	
 	InvestimentoMapper investimentoMapper;
 	
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
-	public void salvar(@RequestBody InvestimentoDTO investimentoDto) throws Exception {		
+	public void salvar(@RequestBody InvestimentoSimplesDTO investimentoDto) throws Exception {		
 		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());		
 		Investimento investimento = investimentoMapper.map(investimentoDto);
 		
 		investimento.setUsuario(usuarioLogado);
-		investimentoRN.salvar(investimento);			
+		investimentoRN.salvar(investimento, investimentoDto.getTipo());		
 	}
 
 	@DeleteMapping("/{id}")
@@ -54,9 +55,9 @@ public class InvestimentoRS {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<InvestimentoDTO>> getLista() throws Exception {
+	public ResponseEntity<List<InvestimentoDetalhesDTO>> getLista() throws Exception {
 		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());
-		List<InvestimentoDTO> lista;
+		List<InvestimentoDetalhesDTO> lista;
 				
 		lista = investimentoRN.listar(usuarioLogado)
 				.stream()

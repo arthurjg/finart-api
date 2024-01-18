@@ -1,4 +1,4 @@
-package br.com.artsoft.finart.controller.dto;
+package br.com.artsoft.finart.controller.investimento.dto;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +12,12 @@ public class InvestimentoMapper {
 	@Autowired
 	private ModelMapper objectMapper;	
 	
-	public Investimento map(InvestimentoDTO investimento) {
+	public Investimento map(InvestimentoSimplesDTO investimento) {
 		return objectMapper.map(investimento, Investimento.class);
 	}
 	
-	public InvestimentoDTO converte(Investimento investimento) {		
-		return objectMapper.map(investimento, InvestimentoDTO.class);
+	public InvestimentoDetalhesDTO converte(Investimento investimento) {		
+		return objectMapper.map(investimento, InvestimentoDetalhesDTO.class);
 	}	
 
 }

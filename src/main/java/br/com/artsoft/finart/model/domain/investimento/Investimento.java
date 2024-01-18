@@ -10,10 +10,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import br.com.artsoft.finart.model.domain.Usuario;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @EqualsAndHashCode
 @Entity
@@ -24,8 +30,10 @@ public class Investimento {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@Setter
 	private String nome;
 	
+	@Setter
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "tipo_id")
 	private InvestimentoTipo tipo;

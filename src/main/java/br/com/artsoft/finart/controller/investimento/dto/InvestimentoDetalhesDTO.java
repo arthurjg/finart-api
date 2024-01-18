@@ -1,4 +1,4 @@
-package br.com.artsoft.finart.controller.dto;
+package br.com.artsoft.finart.controller.investimento.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvestimentoDTO {
+public class InvestimentoDetalhesDTO {
 	
 	private String nome;
 	private String tipo;
