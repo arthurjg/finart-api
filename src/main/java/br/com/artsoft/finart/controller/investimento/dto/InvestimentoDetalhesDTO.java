@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InvestimentoDetalhesDTO {
 	
+	private Integer id;
 	private String nome;
 	private String tipo;
 	private String natureza;

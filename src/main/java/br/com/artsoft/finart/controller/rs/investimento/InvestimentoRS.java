@@ -56,7 +56,7 @@ public class InvestimentoRS {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<InvestimentoDetalhesDTO>> getLista() throws Exception {
+	public ResponseEntity<List<InvestimentoDetalhesDTO>> listar() throws Exception {
 		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());
 		List<InvestimentoDetalhesDTO> lista;
 				
