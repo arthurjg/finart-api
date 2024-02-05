@@ -21,6 +21,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 @EqualsAndHashCode
 @Entity
 @Table(name = "investimento")
@@ -28,17 +29,14 @@ public class Investimento {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Integer id;	
 	
-	@Setter
-	private String nome;
+	private String nome;	
 	
-	@Setter
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "tipo_id")
-	private InvestimentoTipo tipo;
+	private InvestimentoTipo tipo;	
 	
-	@Setter
 	@ManyToOne
 	@JoinColumn(name = "usuario_id")
 	private Usuario usuario;
