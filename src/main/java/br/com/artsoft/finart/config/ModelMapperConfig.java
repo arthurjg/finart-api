@@ -17,7 +17,7 @@ public class ModelMapperConfig {
 		
 		modelMapper.createTypeMap(Investimento.class, InvestimentoDetalhesDTO.class)
 			.<String>addMapping(src -> src.getTipo().getNome(), (dest, val) -> dest.setTipo(val))
-			.<String>addMapping(src -> src.getTipo().getClasse().getNome(), (dest, val) -> dest.setNatureza(val));
+			.<String>addMapping(src -> src.getTipo().getClasse().getNome(), (dest, val) -> dest.setNatureza(val));		
 		
 		
 		return modelMapper;		

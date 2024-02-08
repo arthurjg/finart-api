@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import br.com.artsoft.finart.controller.investimento.mapper.InvestimentoMapper;
 import br.com.artsoft.finart.model.domain.investimento.Investimento;
 
 @SpringBootTest

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.artsoft.finart.controller.investimento.dto.InvestimentoTipoDTO;
-import br.com.artsoft.finart.controller.investimento.dto.InvestimentoTipoMapper;
+import br.com.artsoft.finart.controller.investimento.mapper.InvestimentoTipoMapper;
 import br.com.artsoft.finart.model.service.ContextoRN;
 import br.com.artsoft.finart.model.service.investimento.InvestimentoTipoService;
 import lombok.AllArgsConstructor;

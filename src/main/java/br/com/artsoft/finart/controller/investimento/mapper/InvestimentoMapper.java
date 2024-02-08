@@ -1,9 +1,11 @@
-package br.com.artsoft.finart.controller.investimento.dto;
+package br.com.artsoft.finart.controller.investimento.mapper;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import br.com.artsoft.finart.controller.investimento.dto.InvestimentoDetalhesDTO;
+import br.com.artsoft.finart.controller.investimento.dto.InvestimentoSimplesDTO;
 import br.com.artsoft.finart.model.domain.investimento.Investimento;
 
 @Component

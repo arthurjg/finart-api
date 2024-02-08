@@ -35,7 +35,8 @@ public class InvestimentoService {
 	}
 
 	public Investimento carregar(Integer codigo) {
-		return investimentoRepository.findById(codigo).get();
+		//TODO ALTERAR PARA EXCECAO CUSTOMIZADA
+		return investimentoRepository.findById(codigo).orElseThrow(IllegalArgumentException::new);
 	}
 
 	public List<Investimento> listar(Usuario usuario) {

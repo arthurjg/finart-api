@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.artsoft.finart.controller.investimento.dto.InvestimentoDetalhesDTO;
-import br.com.artsoft.finart.controller.investimento.dto.InvestimentoMapper;
 import br.com.artsoft.finart.controller.investimento.dto.InvestimentoSimplesDTO;
+import br.com.artsoft.finart.controller.investimento.mapper.InvestimentoMapper;
 import br.com.artsoft.finart.controller.util.ContextoUtil;
 import br.com.artsoft.finart.model.domain.Usuario;
 import br.com.artsoft.finart.model.domain.investimento.Investimento;
