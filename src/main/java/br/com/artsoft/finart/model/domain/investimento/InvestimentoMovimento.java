@@ -16,11 +16,13 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
+@Setter
 @EqualsAndHashCode
 @Entity
 @Table(name = "investimento_movimento")
@@ -32,7 +34,7 @@ public class InvestimentoMovimento {
 	
 	private String tipo;
 	
-	private BigDecimal valor;
+	private BigDecimal valor;	
 	
 	private LocalDateTime data;
 	

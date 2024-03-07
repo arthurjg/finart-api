@@ -13,10 +13,14 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class InvestimentoMovimentoService {
 	
-	private final InvestimentoMovimentoRepository investimentoRepository;
+	private final InvestimentoMovimentoRepository movimentoRepository;
 	
 	public List<InvestimentoMovimento> listar(Investimento investimento) {
-		return investimentoRepository.findByInvestimento(investimento);
+		return movimentoRepository.findByInvestimento(investimento);
+	}
+
+	public void salvar(InvestimentoMovimento movimento) {
+		movimentoRepository.save(movimento);		
 	}
 
 }
