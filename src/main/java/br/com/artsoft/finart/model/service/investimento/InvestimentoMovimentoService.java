@@ -22,5 +22,9 @@ public class InvestimentoMovimentoService {
 	public void salvar(InvestimentoMovimento movimento) {
 		movimentoRepository.save(movimento);		
 	}
+	
+	public void remover(Integer movimentoId) {		
+		movimentoRepository.deleteById(movimentoId); 		
+	}
 
 }
