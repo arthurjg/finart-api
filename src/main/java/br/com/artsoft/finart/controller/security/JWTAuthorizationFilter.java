@@ -2,6 +2,8 @@ package br.com.artsoft.finart.controller.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import br.com.artsoft.finart.controller.util.ContextoUtil;
+
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -73,7 +75,9 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
 	@SuppressWarnings("unchecked")
 	private Map<String, Object> validateAndExtractToken(HttpServletRequest request) throws IOException {
-		String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");		
+		String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");	
+		
+		ContextoUtil.validateToken(jwtToken);
 		
 		var payload = jwtToken.substring(jwtToken.indexOf("."), jwtToken.lastIndexOf("."));
 		var objectMapper = new ObjectMapper();

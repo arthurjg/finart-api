@@ -3,8 +3,12 @@ package br.com.artsoft.finart.model.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import br.com.artsoft.finart.infra.usuario.UsuarioDetailsMapper;
 import br.com.artsoft.finart.model.domain.Permissao;
 import br.com.artsoft.finart.model.domain.Usuario;
 import br.com.artsoft.finart.model.repository.UsuarioRepository;
@@ -12,11 +16,13 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UsuarioRN {	 
+public class UsuarioRN implements UserDetailsService {	 
 	
 	private final UsuarioRepository usuarioRepo;		
 	
 	private final CategoriaRN categoriaRN;		
+	
+	private final UsuarioDetailsMapper usuarioMapper;
 	
 	public Usuario carregar( Integer codigo ){
 		return this.usuarioRepo.getById(codigo);
@@ -53,6 +59,13 @@ public class UsuarioRN {
 	
 	public List<Usuario> listar(){
 		return this.usuarioRepo.findAll();
+	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {	
+		
+		Usuario usuario = usuarioRepo.findByEmail(username);
+		return usuarioMapper.convertUsuario(usuario);		 
 	}	
 
 }
