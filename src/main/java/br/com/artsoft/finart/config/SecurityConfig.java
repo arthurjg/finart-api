@@ -28,8 +28,12 @@ public class SecurityConfig {
 	    return http.csrf(csrf -> csrf.disable())
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests(requests -> requests.antMatchers(HttpMethod.POST, "/autenticacao").permitAll()
-                .anyRequest().authenticated()).build();
+                .authorizeRequests(requests -> {
+                	requests.antMatchers(HttpMethod.POST, "/autenticacao").permitAll();
+                	requests.antMatchers(HttpMethod.POST, "/usuarios/registro").permitAll();
+                	requests.anyRequest().authenticated();
+                })
+                .build();
 	}
 
 	

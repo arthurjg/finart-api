@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.artsoft.finart.config.SecurityConfig;
 import br.com.artsoft.finart.controller.dto.UsuarioDTO;
 import br.com.artsoft.finart.controller.dto.UsuarioMapper;
 import br.com.artsoft.finart.model.domain.Usuario;
@@ -30,10 +33,18 @@ public class UsuarioRS {
 	@Autowired
 	UsuarioRN usuarioRN;		
 	
+	@Autowired
+	SecurityConfig security;
+	
 	@PostMapping("/registro")
 	public ResponseEntity<Usuario> salvar(@RequestBody @Validated UsuarioDTO usuario) throws Exception {				
 		
 		Usuario usuarioNovo = UsuarioMapper.map(usuario);
+		
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
+		String senhaCodificada = encoder.encode(usuarioNovo.getSenha());
+		
+		usuarioNovo.setSenha(senhaCodificada);
 		usuarioRN.salvar(usuarioNovo);
 		
 		/**

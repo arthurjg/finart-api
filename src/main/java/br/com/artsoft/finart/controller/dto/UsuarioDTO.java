@@ -23,6 +23,7 @@ public class UsuarioDTO {
 	
 	private String idioma;	
 	
+	@NotBlank
 	private String login;
 	
 	@NotBlank

@@ -3,6 +3,8 @@ package br.com.artsoft.finart.model.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import br.com.artsoft.finart.infra.usuario.UsuarioDetailsMapper;
 import br.com.artsoft.finart.model.domain.Permissao;
 import br.com.artsoft.finart.model.domain.Usuario;
+import br.com.artsoft.finart.model.repository.PermissaoRepository;
 import br.com.artsoft.finart.model.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -18,7 +21,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UsuarioRN implements UserDetailsService {	 
 	
-	private final UsuarioRepository usuarioRepo;		
+	private final UsuarioRepository usuarioRepo;	
+	
+	private final PermissaoRepository permissaoRepository;
 	
 	private final CategoriaRN categoriaRN;		
 	
@@ -40,12 +45,15 @@ public class UsuarioRN implements UserDetailsService {
 		return this.usuarioRepo.findByEmailAndSenha(email, senha);
 	}
 	
+	@Transactional
 	public void salvar( Usuario usuario ){
-		Permissao permissao = new Permissao("ROLE_USUARIO");
+		Permissao permissao = permissaoRepository.findByNome("ROLE_USUARIO");
 		
 		usuario.getPermissoes().add(permissao);
 		this.usuarioRepo.save(usuario);			
-		this.categoriaRN.salvaEstruturaPadrao(usuario);
+		
+		//TODO ATIVAR COM O MODULO FINANCEIRO PESSOAL
+		//this.categoriaRN.salvaEstruturaPadrao(usuario);
 	}	
 	
 	public void atualizar( Usuario usuario ){

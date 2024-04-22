@@ -14,8 +14,7 @@ public class Permissao {
 
 	private String nome;
 	
-	public Permissao(){
-		
+	public Permissao(){		
 	}
 	
 	public Permissao(String nome){
