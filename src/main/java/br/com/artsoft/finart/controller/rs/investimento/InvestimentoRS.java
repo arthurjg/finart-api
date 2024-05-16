@@ -33,7 +33,7 @@ public class InvestimentoRS {
 	
 	ContextoRN contextoRN;	
 	
-	InvestimentoService investimentoRN;	
+	InvestimentoService investimentoService;	
 	
 	InvestimentoMapper investimentoMapper;
 	
@@ -44,7 +44,7 @@ public class InvestimentoRS {
 		Investimento investimento = investimentoMapper.map(investimentoDto);
 		
 		investimento.setUsuario(usuarioLogado);
-		investimentoRN.salvar(investimento, investimentoDto.getTipo());		
+		investimentoService.salvar(investimento, investimentoDto.getTipo());		
 	}
 	
 	@PutMapping("/{id}")
@@ -56,7 +56,7 @@ public class InvestimentoRS {
 		
 		investimento.setId(codigo);
 		investimento.setUsuario(usuarioLogado);
-		investimentoRN.salvar(investimento, investimentoDto.getTipo());	
+		investimentoService.salvar(investimento, investimentoDto.getTipo());	
 		
 		return ResponseEntity.noContent().build();
 	}
@@ -64,8 +64,8 @@ public class InvestimentoRS {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> excluir(@PathVariable("id") Integer codigo) {	
 		
-		Investimento investimento = investimentoRN.carregar(codigo);
-		investimentoRN.excluir(investimento);	
+		Investimento investimento = investimentoService.carregar(codigo);
+		investimentoService.excluir(investimento);	
 		
 		return ResponseEntity.noContent().build();
 	}
@@ -73,12 +73,11 @@ public class InvestimentoRS {
 	@GetMapping
 	public ResponseEntity<List<InvestimentoDetalhesDTO>> listar() throws Exception {
 		Usuario usuarioLogado = contextoRN.getUsuarioLogado(ContextoUtil.getEmailUsuarioLogado());
-		List<InvestimentoDetalhesDTO> lista;
-				
-		lista = investimentoRN.listar(usuarioLogado)
-				.stream()
-				.map(inv -> investimentoMapper.converte(inv))
-				.collect(Collectors.toList());			
+		List<InvestimentoDetalhesDTO> lista = 
+				investimentoService.listar(usuarioLogado)
+					.stream()
+					.map(inv -> investimentoMapper.converte(inv))
+					.collect(Collectors.toList());			
 		
 		return ResponseEntity.ok(lista);
 	}

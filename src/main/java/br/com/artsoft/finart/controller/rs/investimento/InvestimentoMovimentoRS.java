@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.artsoft.finart.controller.investimento.dto.InvestimentoMovimentoDTO;
 import br.com.artsoft.finart.controller.investimento.dto.InvestimentoMovimentoDetalhesDTO;
 import br.com.artsoft.finart.controller.investimento.mapper.InvestimentoMovimentoMapper;
 import br.com.artsoft.finart.controller.util.ContextoUtil;
@@ -51,7 +52,7 @@ public class InvestimentoMovimentoRS {
 		Investimento investimento = investimentoExiste.get();
 		
 		List<InvestimentoMovimentoDetalhesDTO> lista = 
-				investimentoMovimentoService.listar(investimento)
+				investimentoMovimentoService.listarBy(investimento)
 					.stream()
 					.map(inv -> movimentoMapper.converte(inv))
 					.collect(Collectors.toList());			
@@ -62,7 +63,7 @@ public class InvestimentoMovimentoRS {
 	@PostMapping("/{investimentoId}/movimentos")
 	public ResponseEntity<Void> salvar(
 			@PathVariable("investimentoId") Integer codigo,
-			@RequestBody @Validated InvestimentoMovimentoDetalhesDTO movimentoDto, 
+			@RequestBody @Validated InvestimentoMovimentoDTO movimentoDto, 
 			UriComponentsBuilder uriBuilder) throws Exception {				
 		
 		Optional<Investimento> investimentoExiste = getInvestimento(codigo);

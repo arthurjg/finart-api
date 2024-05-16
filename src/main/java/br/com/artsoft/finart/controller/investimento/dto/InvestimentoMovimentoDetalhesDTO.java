@@ -2,31 +2,17 @@ package br.com.artsoft.finart.controller.investimento.dto;
 
 import java.math.BigDecimal;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvestimentoMovimentoDetalhesDTO {
+public class InvestimentoMovimentoDetalhesDTO extends InvestimentoMovimentoDTO {		
 	
-	private Integer id;
-	
-	@NotBlank
-	private String tipo;
-	
-	@NotNull
-	@Positive
-	private BigDecimal valor;
-	
-	@NotBlank
-	private String data;
+	private BigDecimal valorTotal;		
 
 }

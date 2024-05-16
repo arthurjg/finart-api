@@ -15,7 +15,7 @@ public class InvestimentoMovimentoService {
 	
 	private final InvestimentoMovimentoRepository movimentoRepository;
 	
-	public List<InvestimentoMovimento> listar(Investimento investimento) {
+	public List<InvestimentoMovimento> listarBy(Investimento investimento) {
 		return movimentoRepository.findByInvestimento(investimento);
 	}
 

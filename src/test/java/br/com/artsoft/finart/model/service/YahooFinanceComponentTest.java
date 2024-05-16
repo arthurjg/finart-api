@@ -1,6 +1,6 @@
 package br.com.artsoft.finart.model.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 
@@ -18,15 +18,16 @@ class YahooFinanceComponentTest {
 	void setUp() throws Exception {
 		yahooFinance = new YahooFinanceComponent();
 	}
-
-	@Test
+	
+	@Test 
+	//TODO DESABILITADO
 	void testRetornaCotacao() {
 		
 		Acao acao = new Acao();
 		acao.setSigla("PETR4");
 		acao.setOrigem(Character.valueOf('B'));
-		int indiceInformacao = YahooProperties.ULTIMO_PRECO_DIA_ACAO_INDICE;
-		
+		int indiceInformacao = 0;
+				//YahooProperties.ULTIMO_PRECO_DIA_ACAO_INDICE;		
 		
 		try {
 			String cotacao = yahooFinance.retornaCotacao(acao, indiceInformacao, acao.getSigla());

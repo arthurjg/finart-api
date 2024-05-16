@@ -1,18 +1,11 @@
 package br.com.artsoft.finart.config;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import javax.print.attribute.standard.Destination;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import br.com.artsoft.finart.controller.investimento.dto.InvestimentoDetalhesDTO;
-import br.com.artsoft.finart.controller.investimento.dto.InvestimentoMovimentoDetalhesDTO;
-import br.com.artsoft.finart.model.domain.investimento.Investimento;
-import br.com.artsoft.finart.model.domain.investimento.InvestimentoMovimento;
+import br.com.artsoft.finart.model.domain.investimento.InvestimentoSumario;
 
 @Configuration
 public class ModelMapperConfig {
@@ -22,7 +15,7 @@ public class ModelMapperConfig {
 		
 		var modelMapper = new ModelMapper();
 		
-		modelMapper.createTypeMap(Investimento.class, InvestimentoDetalhesDTO.class)
+		modelMapper.createTypeMap(InvestimentoSumario.class, InvestimentoDetalhesDTO.class)
 			.<String>addMapping(src -> src.getTipo().getNome(), (dest, val) -> dest.setTipo(val))
 			.<String>addMapping(src -> src.getTipo().getClasse().getNome(), (dest, val) -> dest.setNatureza(val));
 		

@@ -10,8 +10,8 @@ import br.com.artsoft.finart.model.domain.Usuario;
 import br.com.artsoft.finart.model.domain.investimento.Investimento;
 
 @Repository
-public interface InvestimentoRepository extends JpaRepository<Investimento, Integer> {		
-
-	public List<Investimento> findByUsuario(Usuario usuario);
+public interface InvestimentoRepository extends JpaRepository<Investimento, Integer> {	
+	
+	public List<Investimento> findByUsuario(Usuario usuario);	
 
 }

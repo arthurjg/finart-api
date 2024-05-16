@@ -1,7 +1,9 @@
 create table public.investimento_movimento (
 	id bigserial primary key,
 	tipo varchar(2) not null,	
+	quantidade numeric not null,
 	valor numeric not null,
+	valor_total numeric not null,
 	data timestamp not null,
 	investimento_id int4 not null
 );

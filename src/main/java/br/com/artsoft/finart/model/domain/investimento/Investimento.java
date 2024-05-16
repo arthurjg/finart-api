@@ -39,6 +39,6 @@ public class Investimento {
 	
 	@ManyToOne
 	@JoinColumn(name = "usuario_id")
-	private Usuario usuario;
+	private Usuario usuario;	
 
 }
