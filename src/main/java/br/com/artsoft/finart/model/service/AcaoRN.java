@@ -31,7 +31,6 @@
  */
 package br.com.artsoft.finart.model.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +42,6 @@ import br.com.artsoft.finart.model.domain.AcaoVirtual;
 import br.com.artsoft.finart.model.domain.Usuario;
 import br.com.artsoft.finart.model.exception.RNException;
 import br.com.artsoft.finart.model.repository.AcaoRepository;
-import br.com.artsoft.finart.model.service.yahoofinance.YahooProperties;
 
 @Service
 public class AcaoRN {
@@ -51,8 +49,8 @@ public class AcaoRN {
 	@Autowired
 	private AcaoRepository	acaoRepository;	
 	
-	@Autowired
-	YahooFinanceComponent yahooFinance;
+	/*@Autowired
+	YahooFinanceComponent yahooFinance;*/
 
 	public void salvar(Acao acao) {
 		acaoRepository.save(acao);
@@ -79,12 +77,12 @@ public class AcaoRN {
 		float total = 0.0f;
 		int quantidade = 0;
 
-		try {
+		//try {
 			listaAcao = this.listar(usuario);
 			for (Acao acao : listaAcao) {
 				acaoVirtual = new AcaoVirtual();
 				acaoVirtual.setAcao(acao);
-				cotacao = retornaCotacao(YahooProperties.ULTIMO_PRECO_DIA_ACAO_INDICE, acao);
+				//cotacao = retornaCotacao(YahooProperties.ULTIMO_PRECO_DIA_ACAO_INDICE, acao);
 				if (cotacao != null) {
 					ultimoPreco = new Float(cotacao).floatValue();
 					quantidade = acao.getQuantidade();
@@ -94,23 +92,23 @@ public class AcaoRN {
 					listaAcaoVirtual.add(acaoVirtual);
 				}
 			}
-		} catch (RNException e) {
+		/*} catch (RNException e) {
 			throw new RNException("N�o foi poss�vel listar a��es. Erro: " + e.getMessage());
-		}
+		}*/
 		return listaAcaoVirtual;
 	}
 
 	public String retornaCotacao(int indiceInformacao, Acao acao) throws RNException {		
 		String informacao = null;
-		try {			
+		/*try {			
 			informacao = yahooFinance.retornaCotacao(acao, indiceInformacao, acao.getSigla());
 		} catch (IOException e) {
 			throw new RNException("Não foi possível recuperar cotação. Erro: " + e.getMessage());
-		}
+		}*/
 		return informacao;
 	}
 
-	public String montaLinkAcao(Acao acao) {
+	/*public String montaLinkAcao(Acao acao) {
 		String link = null;
 		if (acao != null) {
 			if (acao.getOrigem() != null) {
@@ -126,5 +124,5 @@ public class AcaoRN {
 			link = YahooProperties.INDICE_BOVESPA;
 		}
 		return link;
-	}
+	}*/
 }
