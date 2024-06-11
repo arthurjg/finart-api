@@ -15,6 +15,7 @@ import br.com.artsoft.finart.model.domain.investimento.Investimento;
 import br.com.artsoft.finart.model.domain.investimento.InvestimentoClasse;
 import br.com.artsoft.finart.model.domain.investimento.InvestimentoSumario;
 import br.com.artsoft.finart.model.domain.investimento.InvestimentoTipo;
+import br.com.artsoft.finart.model.domain.investimento.InvestimentoTipoId;
 
 @SpringBootTest
 class InvestimentoMapperTest {
@@ -48,7 +49,7 @@ class InvestimentoMapperTest {
 				.build();		
 		
 		String nomeTipo = "Ações";
-		String tipo = "AC";
+		String tipo = InvestimentoTipoId.ACOES.getCodigo();
 		
 		InvestimentoClasse classe = InvestimentoClasse.builder()
 				.nome(natureza)
@@ -67,8 +68,9 @@ class InvestimentoMapperTest {
 				.usuario(usuario)
 				.build();
 		
-		BigDecimal valorAquisicao = BigDecimal.TEN;		
-		InvestimentoSumario investimentoSumario = new InvestimentoSumario(investimento, valorAquisicao);		
+		BigDecimal valorAquisicao = BigDecimal.TEN;	
+		BigDecimal precoMercado = BigDecimal.TEN;	
+		InvestimentoSumario investimentoSumario = new InvestimentoSumario(investimento, valorAquisicao, precoMercado, null, null, null);		
 		
 		InvestimentoDetalhesDTO investimentoDetalhes = mapper.converte(investimentoSumario);
 		

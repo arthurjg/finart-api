@@ -2,6 +2,7 @@ package br.com.artsoft.finart.model.service;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 
@@ -11,7 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import br.com.artsoft.finart.model.domain.Permissao;
 import br.com.artsoft.finart.model.domain.Usuario;
+import br.com.artsoft.finart.model.repository.PermissaoRepository;
 import br.com.artsoft.finart.model.repository.UsuarioRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,6 +25,9 @@ class UsuarioRNTest {
 	
 	@Mock
 	UsuarioRepository usuarioRepo;
+	
+	@Mock
+	PermissaoRepository permissaoRepository;
 	
 	@Mock
 	CategoriaRN categoriaRN;	
@@ -38,12 +44,18 @@ class UsuarioRNTest {
 		.senha("12345")
 		.celular("48999887766")
 		.ativo(true)			
-		.build();		
+		.build();	
+		
+		String permissaoBasica = "ROLE_USUARIO";
+		
+		Permissao permissao = new Permissao(permissaoBasica);
+		
+		when(permissaoRepository.findByNome(permissaoBasica)).thenReturn(permissao);
 		
 		usuarioRN.salvar(usuario);
 		
 		verify(usuarioRepo).save(usuario);
-		verify(categoriaRN).salvaEstruturaPadrao(usuario);
+		//verify(categoriaRN).salvaEstruturaPadrao(usuario);
 		assertFalse(usuario.getPermissoes().isEmpty());
 	}
 

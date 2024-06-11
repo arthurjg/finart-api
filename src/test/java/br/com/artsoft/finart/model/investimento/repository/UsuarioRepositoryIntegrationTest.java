@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDate;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +16,15 @@ import br.com.artsoft.finart.model.repository.UsuarioRepository;
 class UsuarioRepositoryIntegrationTest {
 	
 	@Autowired
-	UsuarioRepository usuarioRepository;	
+	UsuarioRepository usuarioRepository;
+	
+	@BeforeEach
+	void init() {
+		Usuario usuario = usuarioRepository.findByEmail("mario@gmail.com");
+		if(usuario != null) {
+			usuarioRepository.delete(usuario);
+		}
+	}	
 
 	@Test
 	void testSaveUsuario() {

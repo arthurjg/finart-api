@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 public class InvestimentoSimplesDTO {
 	
 	@NotBlank
-	private String nome;
+	private String nome;	
+	
+	private String codigo;
 	
 	@NotBlank
 	private String tipo;	

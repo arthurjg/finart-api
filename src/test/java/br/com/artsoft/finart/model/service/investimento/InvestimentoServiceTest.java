@@ -18,11 +18,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import br.com.artsoft.finart.model.domain.Usuario;
+import br.com.artsoft.finart.model.domain.investimento.AtivoRepository;
 import br.com.artsoft.finart.model.domain.investimento.Investimento;
 import br.com.artsoft.finart.model.domain.investimento.InvestimentoClasse;
 import br.com.artsoft.finart.model.domain.investimento.InvestimentoMovimento;
 import br.com.artsoft.finart.model.domain.investimento.InvestimentoSumario;
 import br.com.artsoft.finart.model.domain.investimento.InvestimentoTipo;
+import br.com.artsoft.finart.model.domain.investimento.InvestimentoTipoId;
 import br.com.artsoft.finart.model.domain.investimento.MovimentoTipo;
 import br.com.artsoft.finart.model.repository.InvestimentoRepository;
 import br.com.artsoft.finart.model.repository.InvestimentoTipoRepository;
@@ -41,6 +43,9 @@ class InvestimentoServiceTest {
 	
 	@Mock
 	InvestimentoMovimentoService investimentoMovimentoService;
+	
+	@Mock
+	AtivoRepository ativoRepository;
 
 	@Test
 	void testSalvar() {
@@ -49,7 +54,7 @@ class InvestimentoServiceTest {
 				.nome("John Nobody")
 				.build();		
 		
-		String tipo = "CDB";
+		String tipo = InvestimentoTipoId.CDB.getCodigo();
 		
 		InvestimentoTipo investimentoTipo = InvestimentoTipo.builder()
 				.nome(tipo)
@@ -71,14 +76,14 @@ class InvestimentoServiceTest {
 	@Test
 	void testListarComSucessoSemMovimentos() {
 		
-		String nomeInvestimento = "IVVB11";
+		String nomeInvestimento = "ISHARES SP500";
+		String codigo = "IVVB11";
 		
 		Usuario usuario = Usuario.builder()
 				.nome("John Nobody")
 				.build();		
 		
-		String nomeTipo = "Ações";
-		String tipo = "AC";
+		String nomeTipo = InvestimentoTipoId.ACOES.getCodigo();		
 		
 		InvestimentoClasse classe = InvestimentoClasse.builder()
 				.nome("Renda Variavel")
@@ -87,29 +92,24 @@ class InvestimentoServiceTest {
 		
 		InvestimentoTipo investimentoTipo = InvestimentoTipo.builder()
 				.nome(nomeTipo)
-				.tipo(tipo)
+				.tipo(nomeTipo)
 				.classe(classe)
 				.build();
 		
 		Investimento investimento = Investimento.builder()
 				.nome(nomeInvestimento)		
+				.codigo(codigo)		
 				.tipo(investimentoTipo)
 				.usuario(usuario)
-				.build();
-		
-		/*InvestimentoMovimento movimento = InvestimentoMovimento.builder()
-				.data(LocalDateTime.now())
-				.quantidade(BigDecimal.ONE)
-				.valor(BigDecimal.TEN)
-				.build();*/
+				.build();		
 				
 		List<Investimento> investimentosMock = List.of(investimento);
 		
-		//List<InvestimentoMovimento> movimentos = List.of(movimento);
+		List<InvestimentoMovimento> movimentos = List.of();
 		
-		when(investimentoRepository.findByUsuario(usuario)).thenReturn(investimentosMock);
-		
-		//when(investimentoMovimentoService.listarBy(investimento)).thenReturn(movimentos);
+		when(investimentoRepository.findByUsuario(usuario)).thenReturn(investimentosMock);		
+		when(investimentoMovimentoService.listarBy(investimento)).thenReturn(movimentos);
+		when(ativoRepository.getCotacaoAtualByAtivo(investimento.getCodigo())).thenReturn(BigDecimal.TEN);
 		
 		List<InvestimentoSumario> investimentos = service.listar(usuario);
 		
@@ -120,6 +120,7 @@ class InvestimentoServiceTest {
 		
 		assertNotNull(investimentoResultado);
 		assertEquals(nomeInvestimento, investimentoResultado.getNome());
+		assertEquals(codigo, investimentoResultado.getCodigo());
 		assertEquals(investimentoTipo, investimentoResultado.getTipo());
 		assertEquals(usuario, investimentoResultado.getUsuario());
 		assertEquals(BigDecimal.ZERO, investimentoResultado.getValorAquisicao());
@@ -127,16 +128,16 @@ class InvestimentoServiceTest {
 	}
 	
 	@Test
-	void testListarComSucessoComMovimentos() {
+	void testListarComSucessoComMovimentosInvestimento() {
 		
-		String nomeInvestimento = "IVVB11";
+		String nomeInvestimento = "Tesouro Selic";
+		String codigo = "INTB";
 		
 		Usuario usuario = Usuario.builder()
 				.nome("John Nobody")
 				.build();		
 		
-		String nomeTipo = "Ações";
-		String tipo = "AC";
+		String nomeTipo = InvestimentoTipoId.ACOES.getCodigo();
 		
 		InvestimentoClasse classe = InvestimentoClasse.builder()
 				.nome("Renda Variavel")
@@ -145,28 +146,42 @@ class InvestimentoServiceTest {
 		
 		InvestimentoTipo investimentoTipo = InvestimentoTipo.builder()
 				.nome(nomeTipo)
-				.tipo(tipo)
+				.tipo(nomeTipo)
 				.classe(classe)
 				.build();
 		
 		Investimento investimento = Investimento.builder()
 				.nome(nomeInvestimento)		
 				.tipo(investimentoTipo)
+				.codigo(codigo)
 				.usuario(usuario)
 				.build();
 		
-		InvestimentoMovimento movimento = InvestimentoMovimento.builder()
-				.data(LocalDateTime.now())
+		InvestimentoMovimento movimento1 = InvestimentoMovimento.builder()
+				.data(LocalDateTime.of(2023, 11, 15, 0, 0))
 				.tipo(MovimentoTipo.COMPRA.getCodigo())
-				.quantidade(BigDecimal.ONE)
-				.valor(BigDecimal.TEN)
+				.quantidade(new BigDecimal("16.00"))
+				.valor(new BigDecimal("187.28"))
+				.build();
+		
+		InvestimentoMovimento movimento2 = InvestimentoMovimento.builder()
+				.data(LocalDateTime.of(2024, 3, 14, 0, 0))				
+				.tipo(MovimentoTipo.VENDA.getCodigo())
+				.quantidade(new BigDecimal("5.00"))
+				.valor(new BigDecimal("285.70"))
 				.build();
 				
 		List<Investimento> investimentosMock = List.of(investimento);		
-		List<InvestimentoMovimento> movimentos = List.of(movimento);
+		List<InvestimentoMovimento> movimentos = List.of(movimento1, movimento2);
 		
 		when(investimentoRepository.findByUsuario(usuario)).thenReturn(investimentosMock);		
 		when(investimentoMovimentoService.listarBy(investimento)).thenReturn(movimentos);
+		when(ativoRepository.getCotacaoAtualByAtivo(investimento.getCodigo())).thenReturn(new BigDecimal("308.68"));
+		
+		BigDecimal valorAquisicaoExpected = new BigDecimal("2059.71");
+		BigDecimal valorPatrimonialExpected = new BigDecimal("3395.48");
+		BigDecimal diferencaoValorTotalExpected = new BigDecimal("1335.77");
+		BigDecimal percentualValorTotalExpected = new BigDecimal("64.85");
 		
 		List<InvestimentoSumario> investimentos = service.listar(usuario);
 		
@@ -177,10 +192,81 @@ class InvestimentoServiceTest {
 		
 		assertNotNull(investimentoResultado);
 		assertEquals(nomeInvestimento, investimentoResultado.getNome());
+		assertEquals(codigo, investimentoResultado.getCodigo());
 		assertEquals(investimentoTipo, investimentoResultado.getTipo());
 		assertEquals(usuario, investimentoResultado.getUsuario());
-		assertEquals(BigDecimal.TEN, investimentoResultado.getValorAquisicao());
+		assertEquals(valorAquisicaoExpected.doubleValue(), investimentoResultado.getValorAquisicao().doubleValue(), 0.5);
+		assertEquals(valorPatrimonialExpected.doubleValue(), investimentoResultado.getValorDeMercado().doubleValue(), 0.5);
+		assertEquals(diferencaoValorTotalExpected.doubleValue(), investimentoResultado.getDiferencaValorTotal().doubleValue(), 0.5);
+		assertEquals(percentualValorTotalExpected.doubleValue(), investimentoResultado.getPercentualValorTotal().doubleValue(), 0.5);
 		
 	}
+	
+	@Test
+	void testListarComSucessoComMovimentosInvestimentoNaoAcoes() {
+		
+		String nomeInvestimento = "ISHARES SP500";
+		String codigo = "IVVB11";
+		
+		Usuario usuario = Usuario.builder()
+				.nome("John Nobody")
+				.build();		
+		
+		String nomeTipo = "TESOURO_DIRETO";		
+		
+		InvestimentoClasse classe = InvestimentoClasse.builder()
+				.nome("Renda Variavel")
+				.classe("RV")
+				.build();
+		
+		InvestimentoTipo investimentoTipo = InvestimentoTipo.builder()
+				.nome(nomeTipo)
+				.tipo(InvestimentoTipoId.TESOURO_DIRETO.getCodigo())
+				.classe(classe)
+				.build();
+		
+		Investimento investimento = Investimento.builder()
+				.nome(nomeInvestimento)		
+				.tipo(investimentoTipo)
+				.codigo(codigo)
+				.usuario(usuario)
+				.build();
+		
+		InvestimentoMovimento movimento1 = InvestimentoMovimento.builder()
+				.data(LocalDateTime.of(2023, 11, 15, 0, 0))
+				.tipo(MovimentoTipo.COMPRA.getCodigo())
+				.quantidade(new BigDecimal("16.00"))
+				.valor(new BigDecimal("187.28"))
+				.build();
+		
+		InvestimentoMovimento movimento2 = InvestimentoMovimento.builder()
+				.data(LocalDateTime.of(2024, 3, 14, 0, 0))				
+				.tipo(MovimentoTipo.VENDA.getCodigo())
+				.quantidade(new BigDecimal("5.00"))
+				.valor(new BigDecimal("285.70"))
+				.build();
+				
+		List<Investimento> investimentosMock = List.of(investimento);		
+		List<InvestimentoMovimento> movimentos = List.of(movimento1, movimento2);
+		
+		when(investimentoRepository.findByUsuario(usuario)).thenReturn(investimentosMock);		
+		when(investimentoMovimentoService.listarBy(investimento)).thenReturn(movimentos);		
+		
+		BigDecimal valorAquisicaoExpected = new BigDecimal("2059.71");		
+		
+		List<InvestimentoSumario> investimentos = service.listar(usuario);
+		
+		assertNotNull(investimentos);
+		assertFalse(investimentos.isEmpty());	
+		
+		InvestimentoSumario investimentoResultado = investimentos.get(0);
+		
+		assertNotNull(investimentoResultado);
+		assertEquals(nomeInvestimento, investimentoResultado.getNome());
+		assertEquals(codigo, investimentoResultado.getCodigo());
+		assertEquals(investimentoTipo, investimentoResultado.getTipo());
+		assertEquals(usuario, investimentoResultado.getUsuario());
+		assertEquals(valorAquisicaoExpected.doubleValue(), investimentoResultado.getValorAquisicao().doubleValue(), 0.5);		
+	}	
 
 }

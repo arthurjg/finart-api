@@ -32,6 +32,7 @@ public class Investimento {
 	private Integer id;	
 	
 	private String nome;	
+	private String codigo;	
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "tipo_id")
