@@ -33,8 +33,8 @@ public class UsuarioRS {
 	@Autowired
 	UsuarioRN usuarioRN;		
 	
-	@Autowired
-	SecurityConfig security;
+	/*@Autowired
+	SecurityConfig security;*/
 	
 	@PostMapping("/registro")
 	public ResponseEntity<Usuario> salvar(@RequestBody @Validated UsuarioDTO usuario) throws Exception {				
